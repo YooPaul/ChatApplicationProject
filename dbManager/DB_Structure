@@ -1,0 +1,21 @@
+ChatUsers
+-id
+
+FriendList
+ -id
+ -friendID
+ -friendName
+
+
+Chatmsg
+ -ID
+ -sentFriendID
+ -msg 
+ -nalja
+ foreign key (id) references chatusers (id)
+ 자기아이디 중 상대방에게 보낸 모든것
+ 상대방아이디 중 자기에게 본낸 모든것 
+ receivingFriend 는 딱히 필요없음 
+ 
+ 
+ lastseenmsg
