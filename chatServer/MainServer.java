@@ -46,8 +46,7 @@ public class MainServer extends Thread {
 			chatNotification=new ServerSocket(12346);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("서버생성자 에러");
+			e.printStackTrace();
 		}
 		initialize();
 	}
@@ -80,8 +79,7 @@ public class MainServer extends Thread {
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				System.out.println("initiate() 에서 에러");
+				e.printStackTrace();
 			}
 			
 	}
@@ -123,7 +121,6 @@ public class MainServer extends Thread {
 		public void run(){
 			try {
 				String id=(String) ois.readObject();
-				System.out.println("아이디 받아옴");
 				dao.logIn(id);
 				System.out.println("Login Successful");
 				notification_map.put(id, oos);
@@ -160,7 +157,7 @@ public class MainServer extends Thread {
 			 String id="";
 			try {
 				ChatMsgDTO dto=(ChatMsgDTO) ois.readObject();
-				System.out.println(dto.getId()+" 접속");
+				System.out.println(dto.getId()+" accessed");
 				client_map.put(dto.getId().concat(dto.getFriendid()),oos);//socket);
 				ArrayList<String[]> list=dao.getMsg(dto);
 				oos.writeObject(list);
@@ -172,7 +169,6 @@ public class MainServer extends Thread {
 					//dto=(ChatMsgDTO)ois.readObject();
 					String msg=(String) ois.readObject();
 					dto.setMsg(msg);
-					//System.out.println(dto.getId()+"보낸 문자 "+dto.getMsg()+" to "+dto.getFriendid());
 					dao.saveMsg(dto);
 					notification_map.get(dto.getId()).writeObject("refresh");
 					if(client_map.containsKey(dto.getFriendid().concat(dto.getId()))){
@@ -182,21 +178,18 @@ public class MainServer extends Thread {
 						//if(out!=null){
 						//out.writeObject(dto);//dto.getId()+" : " + dto.getMsg());
 						client_map.get(dto.getFriendid().concat(dto.getId())).writeObject(dto.getId()+" : " + dto.getMsg());
-						System.out.println("전송성공!!");
+						
 						//}
 						//out.close();
 					}else if(dao.isLoggedIn(dto.getFriendid())){
 						notification_map.get(dto.getFriendid()).writeObject(dto.getId()+" : "+dto.getMsg());
 					}
-					//System.out.println("끝!!!");
 				}
-				System.out.println("끝!!!");
 				//client_map.remove(dto.getId());
 				//System.out.println("the client Left");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				System.out.println("문제 에러에러");
+				e.printStackTrace();
 				client_map.remove(id);
 				System.out.println("the client Left");
 			}finally{
@@ -235,12 +228,12 @@ public class MainServer extends Thread {
 		
 		
 		JLabel lblNewLabel = new JLabel("All Registered Users");
-		lblNewLabel.setFont(new Font("굴림", Font.BOLD, 21));
+		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 21));
 		lblNewLabel.setBounds(33, 31, 217, 32);
 		frame.getContentPane().add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Currently Active Users");
-		lblNewLabel_1.setFont(new Font("굴림", Font.BOLD, 22));
+		lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 22));
 		lblNewLabel_1.setBounds(672, 31, 276, 32);
 		frame.getContentPane().add(lblNewLabel_1);
 		ArrayList<String[]> userInfo=dao.selectAllUser();
